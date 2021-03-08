@@ -26,7 +26,7 @@ SECRET_KEY = '*be@1%0#67wnmpxu7r#*1@$y885mxjgpca#dihc8!%#ihz1nv%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['intense-refuge-50963.herokuapp.com']
 
 
 # Application definition

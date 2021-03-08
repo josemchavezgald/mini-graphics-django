@@ -1,3 +1,8 @@
+
+Deploy on Heroku
+
+	intense-refuge-50963.herokuapp.com
+
 abrir terminal en proyectoGraficos
 
 crear ambiente virtual (virtualenv, pipenv)

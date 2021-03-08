@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'proyectoGraficos.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '0QXv9H16f0',
-        'USER': '0QXv9H16f0',
-        'PASSWORD': 'wmsGrK1qih',
-        'HOST': 'remotemysql.com',
-        'PORT': '3306'
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dataCG',
+        'USER': 'josemchavezg',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

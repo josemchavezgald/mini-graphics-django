@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+ {% load static %}
+ {% block page_content %}
+ <div class="container-fluid bg-light" style="height: 100%">
+ 	<div class="row">
+ 		<div class="col-md-10 mx-auto mt-4">
+ 			<div class="card  mb-2" >
+	 			<div class="card-body">
+          <div class="card-title text-center">
+          	<h3>Bienvenido a nuestra plataforma de reportes informativos sobre el cambio climático en Sudamérica.</h3>
+          	<div class="row mx-3">
+          		<div class="col-md-12">
+          			<p class="mt-4" style="text-align: justify;">
+          				A continuación, 
+									puedes acceder a información sobre las emisiones de CO2, deforestación y temperatura “piel” o superficie de la Tierra
+									de distintos países y ciudades de Sudamérica.
+          		
+          				Además, te invitamos a participar en los voluntariados u 
+							organizaciones mencionados en esta aplicación que actúan a favor del cuidado del medioambiente, así como también 
+							puedes llevar a la práctica alguno de los consejos que dejamos a disposición en este sitio. 
+          			</p>
+          		</div>
+          	</div>
+          	<p class="text-center">
+          		“La contaminación nunca debería ser el precio de la prosperidad”. -Al Gore. 
+          	</p>
+          </div>
+          <br>
+         <div class="card-text mx-auto " style="width: 1000px">
+						<form class="row " action="{% url 'dashboard_index' %}" method="post" style="margin-left: 100px">
+							{% csrf_token %}
+  						<div class="col-md-4 col-5" >
+						   <label for="pais">País</label>
+          			<select class="form-select" name="selectedPais" id="pais" required>
+						    	<option selected>Elegir país..</option>
+						    	{% for pais in paises %}
+						    		<option value="{{pais.id}}">{{pais.nombre}}</option>
+							    {% endfor %}
+							  </select>
+						  </div>
+						  <div class="col-md-4 col-5">
+						   <label for="pais">Topico</label>
+          			<select class="form-select" name="selectedTopico" id="topico" required>
+						    	<option selected>Elegir topico..</option>
+						    	{% for topico in topicos %}
+						    		<option value="{{topico.id}}">{{topico.nombre}}</option>
+							    {% endfor %}
+							  </select>
+						  </div>
+						 	<div class="col-md-4 mt-4">
+    						<button type="submit" class="btn btn-primary">Ver Dashboard</button>
+  						</div>
+						</form>
+	         </div>
+	        </div>
+	      </div>
+ 			</div>
+
+ 		</div>
+ 	</div>
+</div>
+{% endblock %}

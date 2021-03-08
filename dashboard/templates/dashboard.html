@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+ {% load static %}
+ {% block page_content %}
+ <div class="container-fluid bg-light" style="height:100%; margin-top: -15px">
+  <div class="row">
+    <div class="col-md-11 mx-auto mt-4">
+      <div class="card mb-2">
+        <div class="card-body">
+          <div class="card-title mx-auto text-center">
+            <h3>{{topico.nombre}} - {{pais.nombre}}</h3>  
+          </div>
+          <div class="card-text">
+            <br>
+            {% if topico.id == 1 %}
+              <form class="row " action="{% url 'dashboard_change' %}" method="post" style="margin-left: 35%">
+                {% csrf_token %}
+                <div class="col-md-4 col-5" >
+                 <label for="anio">Año</label>
+                  <select class="form-select" name="selectedAnio" id="anio" required>
+                    <option selected value="{{anio_i}}">{{anio_i}}</option>
+                    {% for anio in anios %}
+                      {% if anio != anio_i %}
+                        <option value="{{anio}}">{{anio}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <input name="selectedPais1" type="hidden" value="{{pais.id}}">
+                <input name="selectedTopico1" type="hidden" value="{{topico.id}}">
+                <div class="col-md-4 mt-4">
+                  <button type="submit" class="btn btn-primary">Ver Datos</button>
+                </div>
+              </form>
+            {% else %}
+              {% if topico.id == 2 %}
+                <form class="row " action="{% url 'dashboard_change' %}" method="post" style="margin-left: 200px">
+                  {% csrf_token %}
+                  <div class="col-md-4 col-5" >
+                   <label for="ciudad">Ciudad</label>
+                    <select class="form-select" name="selectedCiudad" id="ciudad" required>
+                      <option selected value="{{ciudad_i.id}}">{{ciudad_i.nombre}}</option>
+                      {% for ciudad in ciudades %}
+                        
+                        <option value="{{ciudad.id}}">{{ciudad.nombre}}</option>
+                        
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-4 col-5" >
+                   <label for="anio">Año</label>
+                    <select class="form-select" name="selectedAnio" id="anio" required>
+                      <option selected value="{{anio_i}}">{{anio_i}}</option>
+                      {% for anio in anios %}
+                        {% if anio != anio_i %}
+                        <option value="{{anio}}">{{anio}}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <input name="selectedPais1" type="hidden" value="{{pais.id}}">
+                <input name="selectedTopico1" type="hidden" value="{{topico.id}}">
+                  <div class="col-md-4 mt-4">
+                    <button type="submit" class="btn btn-primary">Ver Datos</button>
+                  </div>
+                </form>
+              {% else %}
+                <form class="row " action="{% url 'dashboard_change' %}" method="post" style="margin-left: 100px">
+                  {% csrf_token %}
+                  <div class="col-md-3 col-5" >
+                   <label for="ciudad">Ciudad</label>
+                    <select class="form-select" name="selectedCiudad" id="ciudad" required>
+                      <option selected value="{{ciudad_i.id}}">{{ciudad_i.nombre}}</option>
+                      {% for ciudad in ciudades %}
+                        {% if ciudad != ciudad_i %}
+                        <option value="{{ciudad.id}}">{{ciudad.nombre}}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-3 col-5" >
+                   <label for="año">Año</label>
+                    <select class="form-select" name="selectedAnio" id="anio" required>
+                      <option selected value="{{anio_i}}">{{anio_i}}</option>
+                      {% for anio in anios %}
+                        {% if anio != anio_i %}
+                        <option value="{{anio}}">{{anio}}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-3 col-5" >
+                   <label for="umbral">Umbral</label>
+                    <select class="form-select" name="selectedUmbral" id="umbral" required>
+                      <option selected value="{{umbral_i}}">{{umbral_i}}</option>
+                      {% for umbral in umbrales %}
+                        {% if umbral != umbral_i %}
+                        <option value="{{umbral}}">{{umbral}}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <input name="selectedPais1" type="hidden" value="{{pais.id}}">
+                <input name="selectedTopico1" type="hidden" value="{{topico.id}}">
+                  <div class="col-md-3 mt-4">
+                    <button type="submit" class="btn btn-primary">Ver Datos</button>
+                  </div>
+                </form>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top: -20px;">
+    <div class="col-md-11 mx-auto mt-4">
+      <div class="card mb-2">
+        <div class="card-body">
+          <div class="card-title mx-auto text-center">
+            <h4 class="font-weight-light">{{topico.nombre}} por año</h4>  
+          </div>
+          <div class="card-text mt-4">
+              {% if topico.id == 1 %}
+                <div class="row mx-2">
+                  <div class="col-md-12">
+                    <div style="margin-top:-20px" id="chart"></div>
+                  </div>
+                  <div class="col-md-12 text-center">
+                    <div class="row">
+                      <div class="col-md-4 mx-auto">
+                        <h4 class="text-center">{{pais.nombre}}</h4>
+                        <h5 class="text-center">Emisiones C02 al {{anio_i}}</h5>
+                       <h3 class="text-center"><bold> {{data_anual.valor}}</bold></h3>
+                      </div>
+                      <div class="col-md-7 mx-auto">
+                        <p style="text-align: justify;">
+                          Las emisiones de dióxido de carbono provienen principalmente de dos fuentes. La quema de combustibles
+                          fósiles (petróleo, gas, carbón) es responsable de 2/3 de las emisiones de CO2 desde el comienzo de 
+                          la revolución industrial. 
+                          La mitad de las emisiones de dióxido de carbono procedentes de las actividades humanas han permanecido 
+                          en la atmósfera, lo que ha provocado el calentamiento del planeta y otros cambios climáticos.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% else %}
+                {% if topico.id == 2 %}
+                  <div class="row mx-2">
+                    <div class="col-md-12">
+
+                      <div style="margin-top:-20px" id="chart"></div>
+                      
+                    </div>
+                    <div class="col-md-12 text-center">
+                    <div class="row">
+                      <div class="col-md-4 mx-auto">
+                        <h4 class="text-center">{{ciudad_i.nombre}}</h4>
+                        <h5 class="text-center">Temperatura al {{anio_i}}</h5>
+                       <h3 class="text-center"><bold> {{data_anual.promedio}} ºC</bold></h3>
+                      </div>
+                      <div class="col-md-7 mx-auto">
+                        <p style="text-align: justify;">
+                          La temperatura “piel” o superficie de la Tierra indica la medida del calentamiento directo 
+                          de la superficie terrestre, donde los rayos del son absorbidos y re-emitidos.
+                           
+                          la temperatura ha ido aumentando progresivamente, donde se ha registrado, a partir del 2015, 
+                          los años más cálidos de los últimos 140 años. Este hecho está contribuyendo a la pérdida de 
+                          glaciares, incendios forestales y, en general, al aumento de desastres naturales. 
+                          Los datos presentados a continuación se encuentran en grados Celsius (C°). 
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                {% else %}
+                  <div class="row mx-2">
+                    <div class="col-md-4">
+                      <p style="text-align: justify;">
+                          Los datos mostrados a continuación se encuentran en una relación entre “Kha” -que son 
+                          kilos/hectáreas-y la cobertura de dosel arbóreo -porcentaje de la superficie total del suelo 
+                          cubierto por la proyección vertical de las copas de los árboles-. Visto esto, los datos 
+                          indican la pérdida de árboles por hectárea (Kha) en una cobertura de dosel entre un 10% a 75%.
+                        </p>  
+                        <h4 class="text-center">{{ciudad_i.nombre}}</h4>
+                        <h5 class="text-center">Deforestación en un cobertura del {{umbral_i}}%</h5>
+                       <h3 class="text-center"><bold> {{valor}} Kha</bold></h3>
+                    </div>
+                    <div class="col-md-8 text-center">
+                      <div style="margin-top:-20px" id="chart"></div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top: -20px;">
+    <div class="col-md-11 mx-auto mt-4">
+      <div class="card mb-2">
+        <div class="card-body">
+          <div class="card-title mx-auto text-center">
+            <h4 class="font-weight-light">Comparación al año {{anio_i}}</h4>  
+          </div>
+          <div class="card-text">
+            {% if topico.id == 1 %}
+              <div class="row mx-2">
+                <div class="col-md-7 mt-4">
+                  <div id="chart2"></div>
+                </div>
+                <div class="col-md-5 text-center mt-4">
+                  <p style="text-align: justify;">
+                    El resto
+                    de las emisiones ha sido eliminado en partes iguales por el océano y tierra (vegetación y suelos),
+                     con lo que se ha frenado en gran medida el ritmo del cambio climático. 
+                    Los datos mostrados a continuación están en toneladas métricas de dióxido de carbono (MtCo2). 
+                    Es una medida utilizada para comparar las emisiones de diferentes gases de efecto invernadero
+                    en función de su potencial de calentamiento global (GWP). 
+                  </p>
+                </div>
+              </div>
+            {% else %}
+              {% if topico.id == 2 %}
+                <div class="row mx-2">
+                  <div class="col-md-7 mt-4">
+                    <div id="chart3" style="margin-left: 10%"></div>
+                  </div>
+                  <div class="col-md-5 text-center mt-4" >
+                    <p style="text-align: justify;margin-top: 20%">
+                      A continuación se presentan las ciudades de {{pais.nombre}} con sus respectivas temperaturas al año {{anio_i}}, observando cúal ciudad presenta un mayor aumento de temperatura en su superficie.
+                    </p>
+                    <h4 ><small>Temperatura promedio ciudades {{pais.nombre}}</small></h4>
+                    <h2><smal>{{total_pais}} ºC</smal></h2>
+                  </div>
+                </div>
+              {% else %}
+                <div class="row mx-2">
+                  <div class="col-md-7 mt-4">
+                    <div id="chart2"></div>
+                  </div>
+                  <div class="col-md-5 text-center mt-4" >
+                    <p style="text-align: justify;">
+                      A continuación se presentan las ciudades de {{pais.nombre}} con sus respectivas perdidas de arboles por hectareas al año {{anio_i}} en una cubertura dosel del {{umbral_i}}%, observando cúal ciudad presenta un mayor aumento de deforestación.
+                    </p>
+                    <h4 ><small>Deforestación total ciudades {{pais.nombre}}</small></h4>
+                    <h2><smal>{{total_pais}} Kha</smal></h2>
+                    <p style="text-align: justify;margin-top: 10px">
+                      La pérdida de cubierta forestal debido a causas humanas o naturales provocan efectos
+                      tales como la pérdida de vegetación, animales y degradación del suelo, lo cual resulta 
+                      en efectos indirectos como la erosión del suelo o contaminación en las aguas. 
+                      La deforestación es una de las principales causas de esta pérdida de cobertura arbórea, 
+                      consecuencia de, principalmente, la ganadería y agricultura. La necesidad de buscar grandes
+                      extensiones de tierra para estas actividades llevó a distintos países de Sudamérica a reducir 
+                      sus bosques, siendo Latinoamérica una de las tres regiones donde más avanza la deforestación. 
+                    </p>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+ </div>
+</div>
+<script>
+
+  var data = JSON.parse("{{data|escapejs}}")
+  var dato;
+  var valores = [];
+  var labels = []; 
+  
+  for(dato of data){
+    valores.push(dato.valor)
+    labels.push(dato.anio)
+  }
+
+  console.log(valores,labels)
+
+  var options = {
+          series: [
+          {
+            name: data[0].tipo,
+            data: valores
+          },
+        ],
+          chart: {
+          height: 350,
+          type: 'line',
+          dropShadow: {
+            enabled: true,
+            color: '#000',
+            top: 18,
+            left: 7,
+            blur: 10,
+            opacity: 0.2
+          },
+          toolbar: {
+            show: false
+          }
+        },
+        colors: ['#77B6EA', '#545454'],
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        grid: {
+          borderColor: '#e7e7e7',
+          row: {
+            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+            opacity: 0.5
+          },
+        },
+        markers: {
+          size: 1
+        },
+        xaxis: {
+          categories: labels,
+          title: {
+            text: 'Años'
+          }
+        },
+        yaxis: {
+          title: {
+            text: data[0].tipo
+          },
+          
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'right',
+          floating: true,
+          offsetY: -25,
+          offsetX: -5
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+      
+</script>
+
+<script>
+
+  var data = JSON.parse("{{data_anual_paises|escapejs}}")
+  console.log(data)
+  var dato;
+  var valores = [];
+  var labels = []; 
+  
+  for(dato of data){
+    valores.push(dato.valor)
+    labels.push(dato.pais)
+  }
+  var options = {
+        series: [{
+        data: valores,
+        name: data[0].tipo
+      }],
+        chart: {
+        type: 'bar',
+        height: 350
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          distributed: true
+        }
+      },
+      colors: ["#000099","#FBC02D","#CC3399",'#003333', '#546E7A', '#FF0033', '#999966', '#669933', '#0000CC', '#6600CC',"#006633",'#f48024', '#CC0033',"#CCCC00","#66BB6A"],
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        categories: labels,
+      }
+      };
+
+      var chart = new ApexCharts(document.querySelector("#chart2"), options);
+      chart.render();
+      
+</script>
+
+<script>
+  var data = JSON.parse("{{data_anual_paises|escapejs}}")
+  console.log(data)
+  var dato;
+  var valores = [];
+  var labels = []; 
+  
+  for(dato of data){
+    valores.push(dato.valor)
+    labels.push(dato.pais)
+  }
+  var options = {
+          series: valores,
+          chart: {
+          width: 600,
+          type: 'pie',
+        },
+        legend: {
+          position: 'bottom'
+        },
+        labels: labels,
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart3"), options);
+        chart.render();
+</script>
+{% endblock %}
+
